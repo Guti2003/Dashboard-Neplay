@@ -1,0 +1,71 @@
+<article
+  class="client-card glass-panel glass-interactive glass-appear"
+  appGlassShine
+  role="button"
+  tabindex="0"
+  (click)="viewDetails.emit()"
+  (keydown.enter)="viewDetails.emit()"
+>
+  <div class="client-card-top">
+    <div class="client-avatar">{{ initials() }}</div>
+    <div class="client-info">
+      <span class="client-name">{{ client().name }}</span>
+      <span class="client-phone">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M4 5c0-1 1-2 2-2h2l2 5-2 1a8 8 0 0 0 5 5l1-2 5 2v2c0 1-1 2-2 2C9 18 4 13 4 5Z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+        </svg>
+        {{ client().phone }}
+      </span>
+    </div>
+  </div>
+
+  <div class="client-memberships">
+    @if (!client().memberships?.length) {
+      <p class="no-memberships">Sin membresías activas.</p>
+    } @else {
+      @for (membership of client().memberships; track membership.profileId) {
+        <div class="membership-item">
+          <span class="membership-dot" [style.background]="membership.platform.color"></span>
+          <div class="membership-details">
+            <span class="membership-platform">{{ membership.platform.name }}</span>
+            <span class="membership-account">{{ membership.accountEmail }}</span>
+          </div>
+          @if (membership.daysRemaining !== null) {
+            <span class="membership-badge membership-badge--{{ membershipVariant(membership.daysRemaining) }}">
+              {{ membershipLabel(membership.daysRemaining) }}
+            </span>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <div class="client-card-footer">
+    <button type="button" class="icon-button" (click)="$event.stopPropagation(); edit.emit()" aria-label="Editar cliente">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <button type="button" class="icon-button icon-button--danger" (click)="$event.stopPropagation(); remove.emit()" aria-label="Eliminar cliente">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M5 7h14M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </div>
+</article>

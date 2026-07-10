@@ -18,6 +18,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
+        path: 'clients',
+        loadComponent: () => import('./pages/clients/clients').then((m) => m.Clients),
+      },
+      {
         path: 'netflix',
         loadComponent: () =>
           import('./pages/platform-accounts/platform-accounts').then((m) => m.PlatformAccounts),

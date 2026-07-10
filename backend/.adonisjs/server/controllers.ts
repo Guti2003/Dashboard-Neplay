@@ -6,9 +6,11 @@
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
   Accounts: () => import('#controllers/accounts_controller'),
+  Clients: () => import('#controllers/clients_controller'),
   Dashboard: () => import('#controllers/dashboard_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Platforms: () => import('#controllers/platforms_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Profiles: () => import('#controllers/profiles_controller'),
+  Search: () => import('#controllers/search_controller'),
 }

@@ -67,6 +67,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dashboard_controller').default['index']>>>
     }
   }
+  'catalog.search.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/search'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/search').searchValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/search_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/search_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'catalog.platforms.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/platforms'
@@ -77,6 +89,30 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['index']>>>
+    }
+  }
+  'catalog.platforms.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/platforms/:slug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['show']>>>
+    }
+  }
+  'catalog.platforms.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/platforms/:slug'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/platform').updatePlatformValidator)>>
+      paramsTuple: [ParamValue]
+      params: { slug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/platform').updatePlatformValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/platforms_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'catalog.accounts.index': {
@@ -103,6 +139,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'catalog.accounts.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/accounts/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['show']>>>
+    }
+  }
   'catalog.accounts.update': {
     methods: ["PUT"]
     pattern: '/api/v1/accounts/:id'
@@ -125,6 +173,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['destroy']>>>
+    }
+  }
+  'catalog.accounts.renew': {
+    methods: ["POST"]
+    pattern: '/api/v1/accounts/:id/renew'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['renew']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accounts_controller').default['renew']>>>
     }
   }
   'catalog.profiles.index': {
@@ -151,6 +211,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'catalog.profiles.store_batch': {
+    methods: ["POST"]
+    pattern: '/api/v1/accounts/:id/profiles/batch'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/profile').createProfilesBatchValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/profile').createProfilesBatchValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['storeBatch']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['storeBatch']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'catalog.profiles.update': {
     methods: ["PUT"]
     pattern: '/api/v1/profiles/:id'
@@ -173,6 +245,78 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['destroy']>>>
+    }
+  }
+  'catalog.profiles.renew': {
+    methods: ["POST"]
+    pattern: '/api/v1/profiles/:id/renew'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['renew']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profiles_controller').default['renew']>>>
+    }
+  }
+  'catalog.clients.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/clients'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/client').listClientsValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'catalog.clients.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/clients'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/client').createClientValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/client').createClientValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'catalog.clients.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/clients/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['show']>>>
+    }
+  }
+  'catalog.clients.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/clients/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/client').updateClientValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/client').updateClientValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'catalog.clients.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/clients/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/clients_controller').default['destroy']>>>
     }
   }
 }

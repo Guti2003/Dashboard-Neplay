@@ -273,6 +273,17 @@ body {
   transition: border-color 0.3s var(--ease-glass), box-shadow 0.3s var(--ease-glass), background 0.3s ease;
 }
 
+.field-select {
+  /* Without this, the browser assumes a light popup and inherits our
+     white --color-text into it, rendering white-on-white options. */
+  color-scheme: dark;
+}
+
+.field-select option {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
 .field-textarea {
   resize: vertical;
   min-height: 4.5rem;
@@ -298,4 +309,112 @@ body {
   margin-top: 0.4rem;
   font-size: 0.78rem;
   color: #ff9b9b;
+}
+
+/**
+ * 30-day membership cycle indicator, shared by account cards and profile
+ * rows: green while healthy, amber close to the deadline, red once overdue.
+ */
+.membership-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  white-space: nowrap;
+}
+
+.membership-badge svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.membership-badge--warning {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 18%, transparent);
+}
+
+.membership-badge--danger {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 18%, transparent);
+}
+
+.renew-link {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  transition: background 0.15s ease;
+}
+
+.renew-link:hover {
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+/**
+ * Account credential display, shared by account cards and anywhere else an
+ * account's email/password needs to be shown with a reveal toggle.
+ */
+.account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.account-field-label {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+}
+
+.account-field-value {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.password-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.password-value {
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.password-toggle svg {
+  width: 0.95rem;
+  height: 0.95rem;
 }

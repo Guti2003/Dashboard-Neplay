@@ -5,6 +5,14 @@
         <div class="form-alert" role="alert">{{ formError() }}</div>
       }
 
+      <div class="field">
+        <span class="field-label">Cliente asignado</span>
+        <app-client-picker [selected]="selectedClient()" (select)="selectedClient.set($event)" />
+        @if (clientTouched() && !selectedClient()) {
+          <span class="field-error">Debes asignar un cliente.</span>
+        }
+      </div>
+
       <label class="field">
         <span class="field-label">Nombre del perfil</span>
         <input type="text" class="field-input" formControlName="name" placeholder="Ej. Perfil Kids" />
@@ -19,11 +27,6 @@
         @if (form.controls.pin.invalid && form.controls.pin.touched) {
           <span class="field-error">El PIN debe tener exactamente 4 dígitos.</span>
         }
-      </label>
-
-      <label class="field">
-        <span class="field-label">Usuario asignado (opcional)</span>
-        <input type="text" class="field-input" formControlName="assignedUser" placeholder="Nombre de quien lo usa" />
       </label>
 
       <div class="form-actions">
@@ -73,9 +76,25 @@
               {{ profile.status === 'ocupado' ? 'Ocupado' : 'Disponible' }}
             </span>
 
-            <span class="profile-assigned">
-              {{ profile.assignedUser ?? '—' }}
-            </span>
+            <div class="profile-client">
+              @if (profile.client) {
+                <span class="profile-client-name">{{ profile.client.name }}</span>
+                <span class="profile-client-phone">{{ profile.client.phone }}</span>
+              } @else {
+                <span class="profile-client-empty">Sin cliente</span>
+              }
+            </div>
+
+            @if (profile.daysRemaining !== null) {
+              <div class="profile-membership">
+                <span class="membership-badge membership-badge--{{ membershipVariant(profile.daysRemaining) }}">
+                  {{ membershipLabel(profile.daysRemaining) }}
+                </span>
+                <button type="button" class="renew-link" (click)="renewProfile(profile)">Renovar</button>
+              </div>
+            } @else {
+              <div class="profile-membership"></div>
+            }
 
             <div class="profile-actions">
               <button type="button" class="icon-button" (click)="openEdit(profile)" aria-label="Editar perfil">

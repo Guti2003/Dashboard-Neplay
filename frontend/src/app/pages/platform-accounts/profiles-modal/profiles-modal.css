@@ -45,7 +45,7 @@
 
 .profile-row {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1.2fr auto 1fr auto auto;
   align-items: center;
   gap: 1rem;
   padding: 0.8rem 1rem;
@@ -109,13 +109,34 @@
   background: color-mix(in srgb, var(--color-warning) 18%, transparent);
 }
 
-.profile-assigned {
-  font-size: 0.82rem;
-  color: var(--color-text-secondary);
+.profile-client {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.profile-client-name {
+  font-size: 0.85rem;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 9rem;
+}
+
+.profile-client-phone {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.profile-client-empty {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}
+
+.profile-membership {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .profile-actions {
@@ -167,13 +188,9 @@
   font-size: 0.9rem;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 680px) {
   .profile-row {
     grid-template-columns: 1fr auto;
     row-gap: 0.5rem;
-  }
-
-  .profile-assigned {
-    max-width: none;
   }
 }

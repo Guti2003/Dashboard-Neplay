@@ -6,7 +6,15 @@ export default class PlatformTransformer extends BaseTransformer<Platform> {
     const accountsCount = this.resource.$extras.accountsCount
 
     return {
-      ...this.pick(this.resource, ['id', 'name', 'slug', 'color', 'createdAt', 'updatedAt']),
+      ...this.pick(this.resource, [
+        'id',
+        'name',
+        'slug',
+        'color',
+        'maxProfilesPerAccount',
+        'createdAt',
+        'updatedAt',
+      ]),
       // Only present when the caller preloaded the count (e.g. the dashboard).
       totalAccounts: this.when(accountsCount !== undefined, () => Number(accountsCount)),
     }

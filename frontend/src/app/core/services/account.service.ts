@@ -21,6 +21,12 @@ export class AccountService {
     );
   }
 
+  get(id: number): Observable<Account> {
+    return this.http
+      .get<ApiResponse<Account>>(`${environment.apiUrl}/accounts/${id}`)
+      .pipe(map((response) => response.data));
+  }
+
   create(platformSlug: string, payload: AccountFormValue): Observable<Account> {
     return this.http
       .post<ApiResponse<Account>>(`${environment.apiUrl}/platforms/${platformSlug}/accounts`, payload)
@@ -35,6 +41,12 @@ export class AccountService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/accounts/${id}`);
+  }
+
+  renew(id: number): Observable<Account> {
+    return this.http
+      .post<ApiResponse<Account>>(`${environment.apiUrl}/accounts/${id}/renew`, {})
+      .pipe(map((response) => response.data));
   }
 
   private buildParams(params: ListAccountsParams): HttpParams {

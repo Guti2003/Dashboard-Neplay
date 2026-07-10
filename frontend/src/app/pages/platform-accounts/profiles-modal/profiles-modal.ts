@@ -3,14 +3,17 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Modal } from '../../../shared/components/modal/modal';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
+import { ClientPicker } from '../../../shared/components/client-picker/client-picker';
 import { ProfileService } from '../../../core/services/profile.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Account } from '../../../core/models/account.model';
 import { Profile } from '../../../core/models/profile.model';
+import { Client } from '../../../core/models/client.model';
+import { membershipLabel, membershipVariant } from '../../../shared/utils/membership';
 
 @Component({
   selector: 'app-profiles-modal',
-  imports: [Modal, ConfirmDialog, ReactiveFormsModule],
+  imports: [Modal, ConfirmDialog, ClientPicker, ReactiveFormsModule],
   templateUrl: './profiles-modal.html',
   styleUrl: './profiles-modal.css',
 })
@@ -30,6 +33,8 @@ export class ProfilesModal implements OnInit {
 
   readonly formOpen = signal(false);
   readonly editingProfile = signal<Profile | null>(null);
+  readonly selectedClient = signal<Client | null>(null);
+  readonly clientTouched = signal(false);
   readonly saving = signal(false);
   readonly formError = signal<string | null>(null);
 
@@ -39,8 +44,10 @@ export class ProfilesModal implements OnInit {
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     pin: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
-    assignedUser: [''],
   });
+
+  readonly membershipLabel = membershipLabel;
+  readonly membershipVariant = membershipVariant;
 
   ngOnInit(): void {
     this.load();
@@ -64,18 +71,21 @@ export class ProfilesModal implements OnInit {
 
   openCreate(): void {
     this.editingProfile.set(null);
+    this.selectedClient.set(null);
+    this.clientTouched.set(false);
     this.formError.set(null);
-    this.form.reset({ name: '', pin: '', assignedUser: '' });
+    this.form.reset({ name: '', pin: '' });
     this.formOpen.set(true);
   }
 
   openEdit(profile: Profile): void {
     this.editingProfile.set(profile);
+    this.selectedClient.set(profile.client);
+    this.clientTouched.set(false);
     this.formError.set(null);
     this.form.reset({
       name: profile.name,
       pin: profile.pin,
-      assignedUser: profile.assignedUser ?? '',
     });
     this.formOpen.set(true);
   }
@@ -85,7 +95,9 @@ export class ProfilesModal implements OnInit {
   }
 
   submit(): void {
-    if (this.form.invalid) {
+    this.clientTouched.set(true);
+
+    if (this.form.invalid || !this.selectedClient()) {
       this.form.markAllAsTouched();
       return;
     }
@@ -94,7 +106,7 @@ export class ProfilesModal implements OnInit {
     this.formError.set(null);
 
     const editing = this.editingProfile();
-    const value = this.form.getRawValue();
+    const value = { ...this.form.getRawValue(), clientId: this.selectedClient()!.id };
     const request = editing
       ? this.profileService.update(editing.id, value)
       : this.profileService.create(this.account().id, value);
@@ -144,8 +156,21 @@ export class ProfilesModal implements OnInit {
     });
   }
 
+  renewProfile(profile: Profile): void {
+    this.profileService.renew(profile.id).subscribe({
+      next: () => {
+        this.load();
+        this.changed.emit();
+        this.toastService.success('Perfil renovado por 30 días más.');
+      },
+      error: () => {
+        this.toastService.error('No se pudo renovar el perfil.');
+      },
+    });
+  }
+
   private resolveErrorMessage(error: HttpErrorResponse): string {
-    const firstError = error.error?.errors?.[0]?.message;
+    const firstError = error.error?.errors?.[0]?.message ?? error.error?.message;
     return firstError ?? 'No se pudo guardar el perfil.';
   }
 }

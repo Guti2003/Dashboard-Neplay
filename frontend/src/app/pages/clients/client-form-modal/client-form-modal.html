@@ -1,0 +1,30 @@
+<app-modal [title]="isEdit() ? 'Editar cliente' : 'Nuevo cliente'" size="sm" (close)="cancel.emit()">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="client-form">
+    @if (errorMessage()) {
+      <div class="form-alert" role="alert">{{ errorMessage() }}</div>
+    }
+
+    <label class="field">
+      <span class="field-label">Nombre</span>
+      <input type="text" class="field-input" formControlName="name" placeholder="Nombre del cliente" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <span class="field-error">El nombre es obligatorio.</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field-label">Número de celular</span>
+      <input type="text" class="field-input" formControlName="phone" placeholder="3001234567" />
+      @if (form.controls.phone.invalid && form.controls.phone.touched) {
+        <span class="field-error">Ingresa un celular válido (mínimo 6 dígitos).</span>
+      }
+    </label>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancel.emit()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">
+        {{ saving() ? 'Guardando...' : isEdit() ? 'Guardar cambios' : 'Crear cliente' }}
+      </button>
+    </div>
+  </form>
+</app-modal>

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import Account from '#models/account'
 import Platform from '#models/platform'
 
@@ -57,7 +58,10 @@ export default class AccountService {
   }
 
   static findOrFail(id: number) {
-    return Account.findOrFail(id)
+    return Account.query()
+      .where('id', id)
+      .withCount('profiles', (profiles) => profiles.as('profilesCount'))
+      .firstOrFail()
   }
 
   static create(platformId: number, payload: Required<Pick<AccountPayload, 'email' | 'password'>> & AccountPayload) {
@@ -72,5 +76,12 @@ export default class AccountService {
 
   static async delete(account: Account) {
     await account.delete()
+  }
+
+  /** Resets the account's 30-day billing cycle to "today". */
+  static async renew(account: Account) {
+    account.renewedAt = DateTime.now()
+    await account.save()
+    return account
   }
 }

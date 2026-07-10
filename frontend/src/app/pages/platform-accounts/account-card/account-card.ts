@@ -1,6 +1,7 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { Account, AccountStatus } from '../../../core/models/account.model';
 import { GlassShineDirective } from '../../../shared/directives/glass-shine.directive';
+import { membershipLabel, membershipVariant } from '../../../shared/utils/membership';
 
 const STATUS_LABEL: Record<AccountStatus, string> = {
   activo: 'Activo',
@@ -27,11 +28,14 @@ export class AccountCard {
   readonly viewProfiles = output<void>();
   readonly edit = output<void>();
   readonly remove = output<void>();
+  readonly renew = output<void>();
 
   readonly showPassword = signal(false);
 
   readonly statusLabel = computed(() => STATUS_LABEL[this.account().status]);
   readonly statusColorVar = computed(() => STATUS_COLOR_VAR[this.account().status]);
+  readonly membershipLabel = computed(() => membershipLabel(this.account().daysRemaining));
+  readonly membershipVariant = computed(() => membershipVariant(this.account().daysRemaining));
 
   togglePassword(): void {
     this.showPassword.update((value) => !value);

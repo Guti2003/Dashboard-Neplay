@@ -6,6 +6,7 @@ import { GlassShineDirective } from '../../shared/directives/glass-shine.directi
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', path: '/dashboard', colorVar: '--color-accent', icon: 'dashboard' },
+  { label: 'Clientes', path: '/clients', colorVar: '--color-accent', icon: 'clients' },
   { label: 'Netflix', path: '/netflix', colorVar: '--color-netflix', icon: 'netflix' },
   { label: 'Disney+', path: '/disney', colorVar: '--color-disney', icon: 'disney' },
   { label: 'Amazon Prime', path: '/amazon-prime', colorVar: '--color-amazon', icon: 'amazon' },

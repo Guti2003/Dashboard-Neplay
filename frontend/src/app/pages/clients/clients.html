@@ -1,0 +1,113 @@
+<div class="page">
+  <header class="page-header">
+    <div class="page-title">
+      <h1>Clientes</h1>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      Nuevo cliente
+    </button>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" />
+        <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Buscar por nombre o celular..."
+        [value]="search()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+
+    <select class="field-select toolbar-select" [value]="sortBy()" (change)="onSortByChange($event)">
+      <option value="createdAt">Ordenar por fecha</option>
+      <option value="name">Ordenar por nombre</option>
+      <option value="phone">Ordenar por celular</option>
+    </select>
+
+    <button type="button" class="btn btn-secondary sort-dir-button" (click)="toggleSortDir()" [attr.aria-label]="sortDir() === 'asc' ? 'Orden ascendente' : 'Orden descendente'">
+      @if (sortDir() === 'asc') {
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      }
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="page-alert" role="alert">
+      <span>{{ error() }}</span>
+      <button type="button" (click)="loadClients()">Reintentar</button>
+    </div>
+  } @else if (loading()) {
+    <div class="clients-grid">
+      @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+        <div class="client-skeleton"></div>
+      }
+    </div>
+  } @else if (clients().length === 0) {
+    <div class="empty-state glass-panel glass-appear">
+      <p>{{ search() ? 'No hay clientes que coincidan con la búsqueda.' : 'Todavía no hay clientes registrados.' }}</p>
+      @if (!search()) {
+        <button type="button" class="btn btn-primary" (click)="openCreateModal()">Crear el primer cliente</button>
+      }
+    </div>
+  } @else {
+    <div class="clients-grid">
+      @for (client of clients(); track client.id) {
+        <app-client-card
+          [client]="client"
+          (viewDetails)="openDetail(client)"
+          (edit)="openEditModal(client)"
+          (remove)="confirmDelete(client)"
+        />
+      }
+    </div>
+
+    @if (meta() && meta()!.lastPage > 1) {
+      <div class="pagination">
+        <button type="button" class="btn btn-secondary" [disabled]="meta()!.currentPage <= 1" (click)="goToPage(meta()!.currentPage - 1)">
+          Anterior
+        </button>
+        <span class="pagination-label">Página {{ meta()!.currentPage }} de {{ meta()!.lastPage }}</span>
+        <button type="button" class="btn btn-secondary" [disabled]="meta()!.currentPage >= meta()!.lastPage" (click)="goToPage(meta()!.currentPage + 1)">
+          Siguiente
+        </button>
+      </div>
+    }
+  }
+</div>
+
+@if (formModalOpen()) {
+  <app-client-form-modal
+    [client]="editingClient()"
+    [saving]="saving()"
+    [errorMessage]="formError()"
+    (save)="saveClient($event)"
+    (cancel)="closeFormModal()"
+  />
+}
+
+@if (deleteTarget()) {
+  <app-confirm-dialog
+    title="Eliminar cliente"
+    [message]="'¿Seguro que quieres eliminar a &quot;' + deleteTarget()!.name + '&quot;? Esta acción no se puede deshacer.'"
+    [loading]="deleting()"
+    (confirmed)="performDelete()"
+    (cancelled)="cancelDelete()"
+  />
+}
+
+@if (detailClient()) {
+  <app-client-detail-modal
+    [client]="detailClient()!"
+    (close)="closeDetail()"
+    (changed)="loadClients()"
+  />
+}

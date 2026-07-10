@@ -36,6 +36,31 @@
   height: 1rem;
 }
 
+.profile-limit-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.profile-limit-label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.profile-limit-label strong {
+  color: var(--color-text);
+}
+
+.profile-limit-input {
+  width: 8rem;
+}
+
+.profile-limit-edit {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

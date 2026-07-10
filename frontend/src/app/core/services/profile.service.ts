@@ -4,7 +4,12 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 import { PaginatedResponse } from '../models/pagination.model';
-import { ListProfilesParams, Profile, ProfileFormValue } from '../models/profile.model';
+import {
+  CreateProfilesBatchPayload,
+  ListProfilesParams,
+  Profile,
+  ProfileFormValue,
+} from '../models/profile.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -23,6 +28,12 @@ export class ProfileService {
       .pipe(map((response) => response.data));
   }
 
+  createBatch(accountId: number, payload: CreateProfilesBatchPayload): Observable<Profile[]> {
+    return this.http
+      .post<ApiResponse<Profile[]>>(`${environment.apiUrl}/accounts/${accountId}/profiles/batch`, payload)
+      .pipe(map((response) => response.data));
+  }
+
   update(id: number, payload: ProfileFormValue): Observable<Profile> {
     return this.http
       .put<ApiResponse<Profile>>(`${environment.apiUrl}/profiles/${id}`, payload)
@@ -31,6 +42,12 @@ export class ProfileService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/profiles/${id}`);
+  }
+
+  renew(id: number): Observable<Profile> {
+    return this.http
+      .post<ApiResponse<Profile>>(`${environment.apiUrl}/profiles/${id}/renew`, {})
+      .pipe(map((response) => response.data));
   }
 
   private buildParams(params: ListProfilesParams): HttpParams {

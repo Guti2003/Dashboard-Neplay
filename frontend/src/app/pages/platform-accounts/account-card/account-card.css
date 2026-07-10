@@ -41,65 +41,17 @@
   background: color-mix(in srgb, var(--status-color) 18%, transparent);
 }
 
-.account-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.account-field-label {
-  font-size: 0.72rem;
-  color: var(--color-text-secondary);
-}
-
-.account-field-value {
-  font-size: 0.9rem;
-  color: var(--color-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.account-field-value.observations {
-  white-space: normal;
-  font-size: 0.82rem;
-  color: var(--color-text-secondary);
-}
-
-.password-row {
+.membership-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
 }
 
-.password-value {
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
-  letter-spacing: 0.02em;
-}
-
-.password-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  flex-shrink: 0;
-  border: none;
-  border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
+.account-field-value.observations {
+  white-space: normal;
+  font-size: 0.82rem;
   color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.password-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-text);
-}
-
-.password-toggle svg {
-  width: 0.95rem;
-  height: 0.95rem;
 }
 
 .account-card-footer {

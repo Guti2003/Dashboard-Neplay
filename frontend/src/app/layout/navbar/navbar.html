@@ -14,8 +14,52 @@
       type="search"
       placeholder="Buscar cuentas, correos, perfiles..."
       [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearchChange($event)"
+      (ngModelChange)="onSearchInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
     />
+
+    @if (dropdownOpen()) {
+      <div class="search-dropdown glass-panel">
+        @if (searching()) {
+          <div class="search-dropdown-item search-dropdown-item--muted">Buscando...</div>
+        } @else if (!hasResults()) {
+          <div class="search-dropdown-item search-dropdown-item--muted">Sin resultados.</div>
+        } @else {
+          @if (results()!.accounts.length > 0) {
+            <span class="search-dropdown-heading">Cuentas</span>
+            @for (account of results()!.accounts; track account.id) {
+              <button type="button" class="search-dropdown-item" (mousedown)="goToAccount(account)">
+                <span class="search-dropdown-dot" [style.background]="account.platform.color"></span>
+                <span class="search-dropdown-label">{{ account.email }}</span>
+                <span class="muted">{{ account.platform.name }}</span>
+              </button>
+            }
+          }
+
+          @if (results()!.profiles.length > 0) {
+            <span class="search-dropdown-heading">Perfiles</span>
+            @for (profile of results()!.profiles; track profile.id) {
+              <button type="button" class="search-dropdown-item" (mousedown)="goToProfile(profile)">
+                <span class="search-dropdown-dot" [style.background]="profile.platform.color"></span>
+                <span class="search-dropdown-label">{{ profile.name }}</span>
+                <span class="muted">{{ profile.accountEmail }}</span>
+              </button>
+            }
+          }
+
+          @if (results()!.clients.length > 0) {
+            <span class="search-dropdown-heading">Clientes</span>
+            @for (client of results()!.clients; track client.id) {
+              <button type="button" class="search-dropdown-item" (mousedown)="goToClient(client)">
+                <span class="search-dropdown-label">{{ client.name }}</span>
+                <span class="muted">{{ client.phone }}</span>
+              </button>
+            }
+          }
+        }
+      </div>
+    }
   </div>
 
   <div class="navbar-right">

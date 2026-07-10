@@ -12,6 +12,29 @@
     </button>
   </header>
 
+  <div class="profile-limit-bar">
+    @if (editingLimit()) {
+      <input
+        type="number"
+        min="1"
+        class="field-input profile-limit-input"
+        placeholder="Sin límite"
+        [value]="limitDraft()"
+        (input)="onLimitInput($event)"
+      />
+      <button type="button" class="btn btn-secondary" (click)="cancelLimitEdit()">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="savingLimit()" (click)="saveLimit()">
+        {{ savingLimit() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    } @else {
+      <span class="profile-limit-label">
+        Límite de perfiles por cuenta:
+        <strong>{{ platform()?.maxProfilesPerAccount ?? 'Sin límite' }}</strong>
+      </span>
+      <button type="button" class="btn btn-secondary profile-limit-edit" (click)="openLimitEdit()">Editar</button>
+    }
+  </div>
+
   <div class="toolbar">
     <div class="search-field">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -75,6 +98,7 @@
           (viewProfiles)="openProfiles(account)"
           (edit)="openEditModal(account)"
           (remove)="confirmDelete(account)"
+          (renew)="renewAccount(account)"
         />
       }
     </div>

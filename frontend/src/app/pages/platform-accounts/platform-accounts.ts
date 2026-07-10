@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, input, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../core/services/account.service';
+import { PlatformService } from '../../core/services/platform.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Account, AccountFormValue, AccountStatus } from '../../core/models/account.model';
+import { Platform } from '../../core/models/platform.model';
 import { PaginationMeta } from '../../core/models/pagination.model';
 import { AccountCard } from './account-card/account-card';
 import { AccountFormModal } from './account-form-modal/account-form-modal';
@@ -27,11 +30,15 @@ const PER_PAGE = 9;
 })
 export class PlatformAccounts {
   private readonly accountService = inject(AccountService);
+  private readonly platformService = inject(PlatformService);
   private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly slug = input.required<string>();
   readonly platformName = input.required<string>();
   readonly colorVar = input.required<string>();
+  readonly openAccount = input<string>();
 
   readonly accounts = signal<Account[]>([]);
   readonly meta = signal<PaginationMeta | null>(null);
@@ -54,6 +61,11 @@ export class PlatformAccounts {
 
   readonly profilesAccount = signal<Account | null>(null);
 
+  readonly platform = signal<Platform | null>(null);
+  readonly editingLimit = signal(false);
+  readonly limitDraft = signal('');
+  readonly savingLimit = signal(false);
+
   private searchDebounce?: ReturnType<typeof setTimeout>;
 
   constructor() {
@@ -62,6 +74,31 @@ export class PlatformAccounts {
       this.slug();
       this.page.set(1);
       this.loadAccounts();
+    });
+
+    effect(() => {
+      this.platformService.get(this.slug()).subscribe({
+        next: (platform) => this.platform.set(platform),
+      });
+    });
+
+    effect(() => {
+      const accountId = this.openAccount();
+      if (!accountId) return;
+
+      this.accountService.get(Number(accountId)).subscribe({
+        next: (account) => {
+          this.profilesAccount.set(account);
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {},
+            replaceUrl: true,
+          });
+        },
+        error: () => {
+          this.toastService.error('No se pudo abrir la cuenta indicada.');
+        },
+      });
     });
   }
 
@@ -206,8 +243,59 @@ export class PlatformAccounts {
     this.loadAccounts();
   }
 
+  renewAccount(account: Account): void {
+    this.accountService.renew(account.id).subscribe({
+      next: () => {
+        this.loadAccounts();
+        this.toastService.success('Cuenta renovada por 30 días más.');
+      },
+      error: () => {
+        this.toastService.error('No se pudo renovar la cuenta.');
+      },
+    });
+  }
+
+  openLimitEdit(): void {
+    const current = this.platform()?.maxProfilesPerAccount;
+    this.limitDraft.set(current != null ? String(current) : '');
+    this.editingLimit.set(true);
+  }
+
+  cancelLimitEdit(): void {
+    this.editingLimit.set(false);
+  }
+
+  onLimitInput(event: Event): void {
+    this.limitDraft.set((event.target as HTMLInputElement).value);
+  }
+
+  saveLimit(): void {
+    const raw = this.limitDraft().trim();
+    const value = raw === '' ? null : Number(raw);
+
+    if (value !== null && (!Number.isInteger(value) || value < 1)) {
+      this.toastService.error('El límite debe ser un número entero mayor o igual a 1.');
+      return;
+    }
+
+    this.savingLimit.set(true);
+
+    this.platformService.updateLimit(this.slug(), value).subscribe({
+      next: (platform) => {
+        this.platform.set(platform);
+        this.savingLimit.set(false);
+        this.editingLimit.set(false);
+        this.toastService.success('Límite de perfiles actualizado.');
+      },
+      error: () => {
+        this.savingLimit.set(false);
+        this.toastService.error('No se pudo actualizar el límite.');
+      },
+    });
+  }
+
   private resolveErrorMessage(error: HttpErrorResponse): string {
-    const firstError = error.error?.errors?.[0]?.message;
+    const firstError = error.error?.errors?.[0]?.message ?? error.error?.message;
     return firstError ?? 'No se pudo guardar la cuenta.';
   }
 }

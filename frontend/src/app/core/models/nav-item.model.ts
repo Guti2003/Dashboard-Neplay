@@ -2,5 +2,5 @@ export interface NavItem {
   label: string;
   path: string;
   colorVar: string;
-  icon: 'dashboard' | 'netflix' | 'disney' | 'amazon';
+  icon: 'dashboard' | 'clients' | 'netflix' | 'disney' | 'amazon';
 }

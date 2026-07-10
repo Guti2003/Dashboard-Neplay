@@ -1,6 +1,15 @@
 import { AccountSchema } from '#database/schema'
-import { afterFetch, afterFind, afterSave, beforeSave, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import {
+  afterFetch,
+  afterFind,
+  afterSave,
+  beforeCreate,
+  beforeSave,
+  belongsTo,
+  hasMany,
+} from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { DateTime } from 'luxon'
 import encryption from '@adonisjs/core/services/encryption'
 import Platform from '#models/platform'
 import Profile from '#models/profile'
@@ -18,6 +27,15 @@ export default class Account extends AccountSchema {
 
   @hasMany(() => Profile)
   declare profiles: HasMany<typeof Profile>
+
+  /**
+   * Starts the 30-day billing cycle at creation; the /renew endpoint bumps
+   * it back to "now" whenever the admin registers a new payment.
+   */
+  @beforeCreate()
+  static setInitialRenewedAt(account: Account) {
+    account.renewedAt ??= DateTime.now()
+  }
 
   /**
    * The streaming service password must be readable by the admin (unlike a

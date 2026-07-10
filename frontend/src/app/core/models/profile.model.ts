@@ -1,3 +1,5 @@
+import { Client } from './client.model';
+
 export type ProfileStatus = 'disponible' | 'ocupado';
 
 export interface Profile {
@@ -6,8 +8,10 @@ export interface Profile {
   name: string;
   pin: string;
   status: ProfileStatus;
-  assignedUser: string | null;
+  clientId: number | null;
+  client: Client | null;
   assignedAt: string | null;
+  daysRemaining: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,7 +19,12 @@ export interface Profile {
 export interface ProfileFormValue {
   name: string;
   pin: string;
-  assignedUser: string;
+  clientId: number | null;
+}
+
+export interface CreateProfilesBatchPayload {
+  clientId: number;
+  profiles: { name: string; pin: string }[];
 }
 
 export interface ListProfilesParams {

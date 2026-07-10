@@ -15,6 +15,17 @@
     </span>
   </div>
 
+  <div class="membership-row">
+    <span class="membership-badge membership-badge--{{ membershipVariant() }}">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" />
+        <path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      {{ membershipLabel() }}
+    </span>
+    <button type="button" class="renew-link" (click)="renew.emit()">Renovar</button>
+  </div>
+
   <div class="account-field">
     <span class="account-field-label">Correo</span>
     <span class="account-field-value">{{ account().email }}</span>

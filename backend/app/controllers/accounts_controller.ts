@@ -13,6 +13,12 @@ import {
  * every platform instead of duplicating a CRUD per platform.
  */
 export default class AccountsController {
+  async show({ params, serialize }: HttpContext) {
+    const account = await AccountService.findOrFail(params.id)
+
+    return serialize(AccountTransformer.transform(account))
+  }
+
   async index({ params, request, serialize }: HttpContext) {
     const platform = await AccountService.findPlatformBySlug(params.slug)
     const options = await request.validateUsing(listAccountsValidator)
@@ -46,5 +52,12 @@ export default class AccountsController {
     await AccountService.delete(account)
 
     return response.noContent()
+  }
+
+  async renew({ params, serialize }: HttpContext) {
+    const account = await AccountService.findOrFail(params.id)
+    await AccountService.renew(account)
+
+    return serialize(AccountTransformer.transform(account))
   }
 }

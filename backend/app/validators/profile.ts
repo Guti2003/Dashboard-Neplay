@@ -9,17 +9,35 @@ const pin = () => vine.string().regex(/^\d{4}$/)
 export const createProfileValidator = vine.create({
   name: vine.string().trim().minLength(1).maxLength(100),
   pin: pin(),
-  assignedUser: vine.string().trim().maxLength(100).nullable().optional(),
+  clientId: vine.number().min(1),
 })
 
 /**
  * Validator to validate the payload when updating
- * an existing profile.
+ * an existing profile. `clientId` may be omitted (client unchanged), but
+ * a profile can never be unassigned once created.
  */
 export const updateProfileValidator = vine.create({
   name: vine.string().trim().minLength(1).maxLength(100).optional(),
   pin: pin().optional(),
-  assignedUser: vine.string().trim().maxLength(100).nullable().optional(),
+  clientId: vine.number().min(1).optional(),
+})
+
+/**
+ * Validator to validate the payload when creating several profiles for the
+ * same client/account in one request (e.g. a client buying N memberships).
+ */
+export const createProfilesBatchValidator = vine.create({
+  clientId: vine.number().min(1),
+  profiles: vine
+    .array(
+      vine.object({
+        name: vine.string().trim().minLength(1).maxLength(100),
+        pin: pin(),
+      })
+    )
+    .minLength(1)
+    .maxLength(20),
 })
 
 /**

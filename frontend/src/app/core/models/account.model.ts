@@ -8,6 +8,8 @@ export interface Account {
   status: AccountStatus;
   observations: string | null;
   profilesCount: number;
+  renewedAt: string;
+  daysRemaining: number;
   createdAt: string;
   updatedAt: string;
 }
