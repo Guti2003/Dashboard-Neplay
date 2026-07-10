@@ -7,6 +7,27 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AccountSchema extends BaseModel {
+  static $columns = ['createdAt', 'email', 'id', 'observations', 'password', 'platformId', 'status', 'updatedAt'] as const
+  $columns = AccountSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare email: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare observations: string | null
+  @column()
+  declare password: string
+  @column()
+  declare platformId: number
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class AuthAccessTokenSchema extends BaseModel {
   static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = AuthAccessTokenSchema.$columns
@@ -28,6 +49,46 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare tokenableId: number
   @column()
   declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PlatformSchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'id', 'name', 'slug', 'updatedAt'] as const
+  $columns = PlatformSchema.$columns
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class ProfileSchema extends BaseModel {
+  static $columns = ['accountId', 'assignedAt', 'assignedUser', 'createdAt', 'id', 'name', 'pin', 'status', 'updatedAt'] as const
+  $columns = ProfileSchema.$columns
+  @column()
+  declare accountId: number
+  @column.dateTime()
+  declare assignedAt: DateTime | null
+  @column()
+  declare assignedUser: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare pin: string
+  @column()
+  declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

@@ -1,0 +1,19 @@
+<div class="modal-backdrop glass-fade" (click)="close.emit()">
+  <div
+    class="modal-panel modal-panel--{{ size() }} glass-panel glass-appear"
+    (click)="$event.stopPropagation()"
+    appGlassShine
+  >
+    <header class="modal-header">
+      <h2>{{ title() }}</h2>
+      <button type="button" class="modal-close" (click)="close.emit()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </header>
+    <div class="modal-body">
+      <ng-content />
+    </div>
+  </div>
+</div>

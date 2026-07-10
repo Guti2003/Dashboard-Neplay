@@ -1,0 +1,171 @@
+.account-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.4rem;
+}
+
+/* Tint the rim with the platform's own color on hover, on top of the shared lift/glow. */
+.account-card:hover {
+  border-color: color-mix(in srgb, var(--card-color) 50%, var(--glass-border-strong));
+}
+
+.account-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.8rem;
+  color: var(--card-color);
+  background: color-mix(in srgb, var(--card-color) 18%, transparent);
+}
+
+.account-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--status-color);
+  background: color-mix(in srgb, var(--status-color) 18%, transparent);
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.account-field-label {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+}
+
+.account-field-value {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-field-value.observations {
+  white-space: normal;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}
+
+.password-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.password-value {
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.password-toggle svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.account-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.profiles-button {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+.profiles-button svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.profiles-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.72rem;
+}
+
+.account-card-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.icon-button--danger:hover {
+  background: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: #ffd7d7;
+}
+
+.icon-button svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}

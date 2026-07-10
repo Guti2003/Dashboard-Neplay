@@ -1,0 +1,77 @@
+<aside class="sidebar glass-panel glass-panel--vertical glass-panel--flush" [class.sidebar--open]="open()" appGlassShine>
+  <div class="brand">
+    <div class="brand-mark">N</div>
+    <span class="brand-name">NetPlay</span>
+  </div>
+
+  <nav class="nav">
+    @for (item of navItems; track item.path) {
+      <a
+        class="nav-link"
+        [style.--nav-color]="'var(' + item.colorVar + ')'"
+        [routerLink]="item.path"
+        routerLinkActive="nav-link--active"
+        (click)="navigate.emit()"
+      >
+        <span class="nav-icon">
+          @switch (item.icon) {
+            @case ('dashboard') {
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                <rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                <rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+                <rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            }
+            @case ('netflix') {
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 3v18l6-4.5L18 21V3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              </svg>
+            }
+            @case ('disney') {
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="m12 3 2.6 5.9L21 9.6l-4.8 4.2L17.6 21 12 17.4 6.4 21l1.4-7.2L3 9.6l6.4-.7L12 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+            @case ('amazon') {
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 17c4 3 12 3 16 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M17 15.5c1.5-.3 2.6-.8 3-1.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <rect x="8" y="4" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            }
+          }
+        </span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="profile">
+      <div class="profile-avatar">{{ currentUser()?.initials ?? '--' }}</div>
+      <div class="profile-info">
+        <span class="profile-name">{{ currentUser()?.fullName ?? currentUser()?.email }}</span>
+        <span class="profile-email">{{ currentUser()?.email }}</span>
+      </div>
+    </div>
+
+    <button type="button" class="logout-button" (click)="logout()">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M15 17v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+        <path d="M9 12h11m-3-3 3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      Cerrar sesión
+    </button>
+  </div>
+</aside>

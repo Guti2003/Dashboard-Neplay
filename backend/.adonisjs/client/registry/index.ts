@@ -30,6 +30,66 @@ const routes = {
     tokens: [{"old":"/api/v1/account/logout","type":0,"val":"api","end":""},{"old":"/api/v1/account/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/account/logout","type":0,"val":"account","end":""},{"old":"/api/v1/account/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['profile.access_tokens.destroy']['types'],
   },
+  'catalog.dashboard.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/dashboard/stats',
+    tokens: [{"old":"/api/v1/dashboard/stats","type":0,"val":"api","end":""},{"old":"/api/v1/dashboard/stats","type":0,"val":"v1","end":""},{"old":"/api/v1/dashboard/stats","type":0,"val":"dashboard","end":""},{"old":"/api/v1/dashboard/stats","type":0,"val":"stats","end":""}],
+    types: placeholder as Registry['catalog.dashboard.index']['types'],
+  },
+  'catalog.platforms.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/platforms',
+    tokens: [{"old":"/api/v1/platforms","type":0,"val":"api","end":""},{"old":"/api/v1/platforms","type":0,"val":"v1","end":""},{"old":"/api/v1/platforms","type":0,"val":"platforms","end":""}],
+    types: placeholder as Registry['catalog.platforms.index']['types'],
+  },
+  'catalog.accounts.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/platforms/:slug/accounts',
+    tokens: [{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"api","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"v1","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"platforms","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":1,"val":"slug","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"accounts","end":""}],
+    types: placeholder as Registry['catalog.accounts.index']['types'],
+  },
+  'catalog.accounts.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/platforms/:slug/accounts',
+    tokens: [{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"api","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"v1","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"platforms","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":1,"val":"slug","end":""},{"old":"/api/v1/platforms/:slug/accounts","type":0,"val":"accounts","end":""}],
+    types: placeholder as Registry['catalog.accounts.store']['types'],
+  },
+  'catalog.accounts.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/accounts/:id',
+    tokens: [{"old":"/api/v1/accounts/:id","type":0,"val":"api","end":""},{"old":"/api/v1/accounts/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/accounts/:id","type":0,"val":"accounts","end":""},{"old":"/api/v1/accounts/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['catalog.accounts.update']['types'],
+  },
+  'catalog.accounts.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/accounts/:id',
+    tokens: [{"old":"/api/v1/accounts/:id","type":0,"val":"api","end":""},{"old":"/api/v1/accounts/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/accounts/:id","type":0,"val":"accounts","end":""},{"old":"/api/v1/accounts/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['catalog.accounts.destroy']['types'],
+  },
+  'catalog.profiles.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/accounts/:id/profiles',
+    tokens: [{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"api","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"v1","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"accounts","end":""},{"old":"/api/v1/accounts/:id/profiles","type":1,"val":"id","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"profiles","end":""}],
+    types: placeholder as Registry['catalog.profiles.index']['types'],
+  },
+  'catalog.profiles.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/accounts/:id/profiles',
+    tokens: [{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"api","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"v1","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"accounts","end":""},{"old":"/api/v1/accounts/:id/profiles","type":1,"val":"id","end":""},{"old":"/api/v1/accounts/:id/profiles","type":0,"val":"profiles","end":""}],
+    types: placeholder as Registry['catalog.profiles.store']['types'],
+  },
+  'catalog.profiles.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/profiles/:id',
+    tokens: [{"old":"/api/v1/profiles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/profiles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/profiles/:id","type":0,"val":"profiles","end":""},{"old":"/api/v1/profiles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['catalog.profiles.update']['types'],
+  },
+  'catalog.profiles.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/profiles/:id',
+    tokens: [{"old":"/api/v1/profiles/:id","type":0,"val":"api","end":""},{"old":"/api/v1/profiles/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/profiles/:id","type":0,"val":"profiles","end":""},{"old":"/api/v1/profiles/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['catalog.profiles.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

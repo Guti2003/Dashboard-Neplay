@@ -1,1 +1,301 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --color-bg: #0b0f19;
+  --color-card: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-text: #ffffff;
+  --color-text-secondary: #a0a7b5;
+
+  --color-netflix: #e50914;
+  --color-disney: #113ccf;
+  --color-amazon: #00a8e1;
+
+  --color-accent: #6c8bff;
+  --color-accent-strong: #8b5cf6;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+
+  --radius-sm: 0.6rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+
+  /* Liquid Glass system */
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-bg-strong: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-border-strong: rgba(255, 255, 255, 0.26);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+  --glass-shadow: rgba(0, 0, 0, 0.55);
+  --glass-blur: 22px;
+  --glass-saturate: 150%;
+  --ease-glass: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
+}
+
+/**
+ * Liquid Glass system
+ * ---------------------------------------------------------------------
+ * One shared surface used by every panel in the app (login card, sidebar,
+ * navbar, stat cards, account cards, modals, toasts, the 404 card). It
+ * layers:
+ *  1. a soft top-to-bottom gradient for volume (brighter near the "light
+ *     source" at the top, fading toward the base) on top of the tinted
+ *     translucent background,
+ *  2. backdrop-filter blur+saturate — the actual "seeing through frosted
+ *     glass" effect; this is the honest web equivalent of refraction,
+ *     true pixel-bending refraction needs WebGL/SVG displacement maps,
+ *  3. a specular highlight in ::before: a diagonal sheen plus a radial
+ *     "hotspot" positioned by --mx/--my (defaults to a fixed point near
+ *     the top; the .glass-shine directive drives it live with the cursor),
+ *  4. a hairline top-edge reflection in ::after, like light catching the
+ *     rim of a glass pane,
+ *  5. a multi-layer box-shadow: an inner top rim highlight, an inner
+ *     bottom shadow for depth, and an ambient elevation shadow.
+ *
+ * Because ::before/::after are the first painted children, real content
+ * must be lifted onto its own paint layer to stay above them — the
+ * `.glass-panel > *` rule below does that once for every consumer.
+ */
+.glass-panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.04) 100%),
+    var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.07) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.25) inset,
+    0 24px 60px -24px var(--glass-shadow);
+  transition: transform 0.5s var(--ease-glass), box-shadow 0.5s var(--ease-glass), border-color 0.4s ease;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at var(--mx, 60%) var(--my, 15%), rgba(255, 255, 255, 0.07), transparent 40%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0%, transparent 30%, transparent 72%, rgba(255, 255, 255, 0.03) 100%);
+  transition: background 0.6s ease;
+  pointer-events: none;
+}
+
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.glass-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Edge-to-edge bars (sidebar, navbar): no rounding, they meet the viewport edge. */
+.glass-panel--flush {
+  border-radius: 0;
+}
+
+/* Tall vertical surfaces (sidebar): highlight reads top-to-bottom instead of diagonal. */
+.glass-panel--vertical::before {
+  background:
+    radial-gradient(circle at var(--mx, 50%) var(--my, 10%), rgba(255, 255, 255, 0.06), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, transparent 35%);
+}
+
+/* Wide horizontal surfaces (navbar): a low, wide sheen instead of a corner hotspot. */
+.glass-panel--horizontal::before {
+  background:
+    radial-gradient(ellipse at var(--mx, 30%) 0%, rgba(255, 255, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 80%);
+}
+
+/* Hover elevation: the pane lifts slightly and brightens just a touch, like glass catching a bit more light. */
+.glass-interactive {
+  cursor: pointer;
+}
+
+.glass-interactive:hover,
+.glass-interactive:focus-within {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--glass-border-strong) 60%, var(--glass-border));
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 0 rgba(0, 0, 0, 0.25) inset,
+    0 22px 50px -20px var(--glass-shadow);
+}
+
+/* Entrance for panes that appear on demand (modals, dropdowns). */
+@keyframes glass-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+.glass-appear {
+  animation: glass-appear 0.35s var(--ease-glass);
+}
+
+@keyframes glass-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.glass-fade {
+  animation: glass-fade 0.2s ease;
+}
+
+/**
+ * Shared button + form-field primitives reused across the CRUD screens
+ * (account cards, modals, forms) so every button/input looks consistent.
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease-glass), box-shadow 0.35s var(--ease-glass), opacity 0.15s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.25) inset,
+    0 12px 26px -12px color-mix(in srgb, var(--color-accent) 65%, transparent);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.3) inset,
+    0 16px 32px -12px color-mix(in srgb, var(--color-accent) 75%, transparent);
+}
+
+.btn-secondary {
+  color: var(--color-text);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  color: #ffffff;
+  background: color-mix(in srgb, var(--color-danger) 70%, transparent);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--color-danger);
+  transform: translateY(-1px);
+}
+
+.field {
+  display: block;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset;
+  transition: border-color 0.3s var(--ease-glass), box-shadow 0.3s var(--ease-glass), background 0.3s ease;
+}
+
+.field-textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
+}
+
+.field-error {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: #ff9b9b;
+}

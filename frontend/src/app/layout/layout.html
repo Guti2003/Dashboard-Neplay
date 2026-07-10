@@ -1,0 +1,14 @@
+<div class="layout">
+  <app-sidebar [open]="sidebarOpen()" (navigate)="closeSidebar()" />
+
+  @if (sidebarOpen()) {
+    <div class="backdrop" (click)="closeSidebar()" aria-hidden="true"></div>
+  }
+
+  <div class="layout-main">
+    <app-navbar (menuToggle)="toggleSidebar()" />
+    <main class="layout-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

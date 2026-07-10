@@ -1,0 +1,29 @@
+<header class="navbar glass-panel glass-panel--horizontal glass-panel--flush" appGlassShine>
+  <button type="button" class="menu-button" (click)="menuToggle.emit()" aria-label="Abrir menú">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" />
+      <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+    <input
+      type="search"
+      placeholder="Buscar cuentas, correos, perfiles..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+    />
+  </div>
+
+  <div class="navbar-right">
+    <span class="today">{{ today }}</span>
+
+    <div class="user">
+      <div class="user-avatar">{{ currentUser()?.initials ?? '--' }}</div>
+      <span class="user-name">{{ currentUser()?.fullName ?? currentUser()?.email }}</span>
+    </div>
+  </div>
+</header>

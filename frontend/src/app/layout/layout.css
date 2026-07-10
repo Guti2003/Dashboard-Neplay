@@ -1,0 +1,31 @@
+.layout {
+  display: flex;
+  min-height: 100dvh;
+  background: var(--color-bg);
+}
+
+.layout-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.layout-content {
+  flex: 1;
+  padding: 1.75rem;
+  overflow-y: auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 901px) {
+  .backdrop {
+    display: none;
+  }
+}

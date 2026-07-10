@@ -24,4 +24,16 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
+
+  // Database (PostgreSQL)
+  DB_HOST: Env.schema.string({ format: 'host' }),
+  DB_PORT: Env.schema.number(),
+  DB_USER: Env.schema.string(),
+  DB_PASSWORD: Env.schema.string.optional(),
+  DB_DATABASE: Env.schema.string(),
+
+  // JWT
+  JWT_SECRET: Env.schema.secret(),
+  JWT_ACCESS_EXPIRES_IN: Env.schema.string(),
+  JWT_REMEMBER_EXPIRES_IN: Env.schema.string(),
 })

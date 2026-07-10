@@ -1,0 +1,123 @@
+<div class="page">
+  <header class="page-header">
+    <div class="page-title">
+      <span class="dot" [style.background]="'var(' + colorVar() + ')'" aria-hidden="true"></span>
+      <h1>{{ platformName() }}</h1>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      Nueva cuenta
+    </button>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" />
+        <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Buscar por correo u observaciones..."
+        [value]="search()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+
+    <select class="field-select toolbar-select" [value]="statusFilter()" (change)="onStatusFilterChange($event)">
+      <option value="">Todos los estados</option>
+      <option value="activo">Activo</option>
+      <option value="suspendido">Suspendido</option>
+      <option value="vencido">Vencido</option>
+    </select>
+
+    <select class="field-select toolbar-select" [value]="sortBy()" (change)="onSortByChange($event)">
+      <option value="createdAt">Ordenar por fecha</option>
+      <option value="email">Ordenar por correo</option>
+      <option value="status">Ordenar por estado</option>
+    </select>
+
+    <button type="button" class="btn btn-secondary sort-dir-button" (click)="toggleSortDir()" [attr.aria-label]="sortDir() === 'asc' ? 'Orden ascendente' : 'Orden descendente'">
+      @if (sortDir() === 'asc') {
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14m6-6-6 6-6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      }
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="page-alert" role="alert">
+      <span>{{ error() }}</span>
+      <button type="button" (click)="loadAccounts()">Reintentar</button>
+    </div>
+  } @else if (loading()) {
+    <div class="accounts-grid">
+      @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+        <div class="account-skeleton"></div>
+      }
+    </div>
+  } @else if (accounts().length === 0) {
+    <div class="empty-state glass-panel glass-appear" appGlassShine>
+      <p>{{ search() || statusFilter() ? 'No hay cuentas que coincidan con los filtros.' : 'Todavía no hay cuentas de ' + platformName() + '.' }}</p>
+      @if (!search() && !statusFilter()) {
+        <button type="button" class="btn btn-primary" (click)="openCreateModal()">Crear la primera cuenta</button>
+      }
+    </div>
+  } @else {
+    <div class="accounts-grid">
+      @for (account of accounts(); track account.id) {
+        <app-account-card
+          [account]="account"
+          [colorVar]="colorVar()"
+          (viewProfiles)="openProfiles(account)"
+          (edit)="openEditModal(account)"
+          (remove)="confirmDelete(account)"
+        />
+      }
+    </div>
+
+    @if (meta() && meta()!.lastPage > 1) {
+      <div class="pagination">
+        <button type="button" class="btn btn-secondary" [disabled]="meta()!.currentPage <= 1" (click)="goToPage(meta()!.currentPage - 1)">
+          Anterior
+        </button>
+        <span class="pagination-label">Página {{ meta()!.currentPage }} de {{ meta()!.lastPage }}</span>
+        <button type="button" class="btn btn-secondary" [disabled]="meta()!.currentPage >= meta()!.lastPage" (click)="goToPage(meta()!.currentPage + 1)">
+          Siguiente
+        </button>
+      </div>
+    }
+  }
+</div>
+
+@if (formModalOpen()) {
+  <app-account-form-modal
+    [account]="editingAccount()"
+    [platformName]="platformName()"
+    [saving]="saving()"
+    [errorMessage]="formError()"
+    (save)="saveAccount($event)"
+    (cancel)="closeFormModal()"
+  />
+}
+
+@if (deleteTarget()) {
+  <app-confirm-dialog
+    title="Eliminar cuenta"
+    [message]="'¿Seguro que quieres eliminar la cuenta &quot;' + deleteTarget()!.email + '&quot;? Se eliminarán también sus perfiles.'"
+    [loading]="deleting()"
+    (confirmed)="performDelete()"
+    (cancelled)="cancelDelete()"
+  />
+}
+
+@if (profilesAccount()) {
+  <app-profiles-modal
+    [account]="profilesAccount()!"
+    (close)="closeProfiles()"
+    (changed)="onProfilesChanged()"
+  />
+}

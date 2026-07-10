@@ -1,0 +1,22 @@
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Sidebar } from './sidebar/sidebar';
+import { Navbar } from './navbar/navbar';
+
+@Component({
+  selector: 'app-layout',
+  imports: [RouterOutlet, Sidebar, Navbar],
+  templateUrl: './layout.html',
+  styleUrl: './layout.css',
+})
+export class Layout {
+  readonly sidebarOpen = signal(false);
+
+  toggleSidebar(): void {
+    this.sidebarOpen.update((value) => !value);
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen.set(false);
+  }
+}
