@@ -10,8 +10,8 @@ import type ClientTransformer from '#transformers/client_transformer'
 import type MembershipCycleTransformer from '#transformers/membership_cycle'
 import type PlatformTransformer from '#transformers/platform_transformer'
 import type ProfileTransformer from '#transformers/profile_transformer'
-import type UserTransformer from '#transformers/user_transformer'
 import type SearchTransformer from '#transformers/search_transformer'
+import type UserTransformer from '#transformers/user_transformer'
 
 export namespace Data {
   export type Account = InferData<AccountTransformer>
@@ -34,12 +34,12 @@ export namespace Data {
   export namespace Profile {
     export type Variants = InferVariants<ProfileTransformer>
   }
-  export type User = InferData<UserTransformer>
-  export namespace User {
-    export type Variants = InferVariants<UserTransformer>
-  }
   export type Search = InferData<SearchTransformer>
   export namespace Search {
     export type Variants = InferVariants<SearchTransformer>
+  }
+  export type User = InferData<UserTransformer>
+  export namespace User {
+    export type Variants = InferVariants<UserTransformer>
   }
 }
